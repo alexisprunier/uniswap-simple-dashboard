@@ -1,33 +1,37 @@
 import React, { useState, useEffect } from 'react'
 import './index.css'
 import { useQuery } from '@apollo/react-hooks'
-import { DAI_QUERY } from 'services/the_graph/queries/dai'
+import { TOP_TOKEN_100_QUERY } from 'services/the_graph/queries/top_token_100'
+import { Link } from 'react-router-dom'
 
 interface MainProps {
 }
 
 const Main: React.FC<MainProps> = ({}) => {
-  const [daiData, setDaiData] = useState();
+  const [topTokens, setTopTokens] = useState(undefined);
 
   const {
     loading, error, data
-  } = useQuery(DAI_QUERY, {
-    variables: {
-      tokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
-    },
-  })
+  } = useQuery(TOP_TOKEN_100_QUERY)
 
   useEffect(() => {
-    setDaiData(data);
-    console.log(loading, error, data);
+    setTopTokens(data);
   }, [data]);
 
-  useEffect(() => {
-    console.log(loading, error, data);
-  }, [error]);
-
   const buildDataContent = () => {
-    return daiData ? JSON.stringify(daiData) : "No data";
+    if (!topTokens) {
+      return "No data"
+    }
+
+    return <table>
+      {topTokens.tokens.map((p) => (
+        <tr>
+          <td>{p.id}</td>
+          <td>{p.symbol}</td>
+          <td><Link to={"/token/" + p.id}>Go!</Link></td>
+        </tr>
+      ))}
+    </table>;
   }
 
   return (

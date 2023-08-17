@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import './index.css'
 import { useQuery } from '@apollo/react-hooks'
 import { TOKEN_POOLS_QUERY } from 'services/the_graph/queries/token_pools'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate  } from 'react-router-dom'
+import CommandBar from 'components/CommandBar'
 
 interface TokenProps {
 }
 
 const Token: React.FC<TokenProps> = ({}) => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [pools, setPools] = useState(undefined);
 
@@ -41,9 +43,11 @@ const Token: React.FC<TokenProps> = ({}) => {
 
   return (
     <div className="Token">
-      <p>
-        {buildDataContent()}
-      </p>
+      <CommandBar 
+        backAction={() => navigate('/')}
+      />
+
+      {buildDataContent()}
     </div>
   );
 }

@@ -15,6 +15,8 @@ interface AppProps {
 const App: React.FC<AppProps> = ({}) => {
   return (
     <div className="App">
+      <div className="pattern"/>
+
       <Router>
         <Routes>
           <Route path="/" element={<Main />} />

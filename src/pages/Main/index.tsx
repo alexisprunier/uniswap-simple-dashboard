@@ -3,6 +3,7 @@ import './index.css'
 import { useQuery } from '@apollo/react-hooks'
 import { TOP_TOKEN_100_QUERY } from 'services/the_graph/queries/top_token_100'
 import { Link } from 'react-router-dom'
+import CommandBar from 'components/CommandBar'
 
 interface MainProps {
 }
@@ -26,8 +27,8 @@ const Main: React.FC<MainProps> = ({}) => {
     return <table>
       {topTokens.tokens.map((p) => (
         <tr>
-          <td>{p.id}</td>
           <td>{p.symbol}</td>
+          <td>{p.volumeUSD}</td>
           <td><Link to={"/token/" + p.id}>Go!</Link></td>
         </tr>
       ))}
@@ -36,9 +37,9 @@ const Main: React.FC<MainProps> = ({}) => {
 
   return (
     <div className="Main">
-      <p>
-        {buildDataContent()}
-      </p>
+      <CommandBar />
+
+      {buildDataContent()}
     </div>
   );
 }

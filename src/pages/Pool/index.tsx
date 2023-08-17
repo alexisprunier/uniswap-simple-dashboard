@@ -3,6 +3,7 @@ import './index.css'
 import { useQuery } from '@apollo/react-hooks'
 import { TOKEN_POOLS_QUERY } from 'services/the_graph/queries/token_pools'
 import { Link } from 'react-router-dom'
+import CommandBar from 'components/CommandBar'
 
 interface PoolProps {
 }
@@ -40,9 +41,9 @@ const Pool: React.FC<PoolProps> = ({}) => {
 
   return (
     <div className="Pool">
-      <p>
-        {buildDataContent()}
-      </p>
+      <CommandBar />
+
+      {buildDataContent()}
     </div>
   );
 }

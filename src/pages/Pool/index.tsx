@@ -1,39 +1,42 @@
 import React, { useState, useEffect } from 'react'
 import './index.css'
 import { useQuery } from '@apollo/react-hooks'
-import { TOKEN_POOLS_QUERY } from 'services/the_graph/queries/token_pools'
-import { Link } from 'react-router-dom'
+import { POOL_PRICE_QUERY } from 'services/the_graph/queries/pool_price'
+import { Link, useParams, useNavigate  } from 'react-router-dom'
 import CommandBar from 'components/CommandBar'
+import Loading from 'components/Loading'
 
 interface PoolProps {
 }
 
 const Pool: React.FC<PoolProps> = ({}) => {
-  const [pools, setPools] = useState(undefined);
+  const navigate = useNavigate();
+  const [poolData, setPoolData] = useState(undefined);
+  const { id } = useParams();
 
   const {
     loading, error, data
-  } = useQuery(TOKEN_POOLS_QUERY, {
+  } = useQuery(POOL_PRICE_QUERY, {
     variables: {
-      token: "0x956f47f50a910163d8bf957cf5846d573e7f87ca"
+      pool_id: id
     },
   })
 
   useEffect(() => {
-    setPools(data);
+    setPoolData(data);
   }, [data]);
 
   const buildDataContent = () => {
-    if (!pools) {
-      return "No data"
+    if (!poolData) {
+      return <Loading />
     }
 
     return <table>
-      {pools.pools.map((p) => (
+      {poolData.poolHourDatas.map((p) => (
         <tr>
-          <td>{p.token0.symbol}</td>
-          <td>{p.token1.symbol}</td>
-          <td><Link to="pool">Go!</Link></td>
+          <td>{p.periodStartUnix}</td>
+          <td>{p.token0Price}</td>
+          <td>{p.token1Price}</td>
         </tr>
       ))}
     </table>;
@@ -41,7 +44,9 @@ const Pool: React.FC<PoolProps> = ({}) => {
 
   return (
     <div className="Pool">
-      <CommandBar />
+      <CommandBar
+        backAction={() => navigate('/')}
+      />
 
       {buildDataContent()}
     </div>
